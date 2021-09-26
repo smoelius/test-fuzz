@@ -8,10 +8,7 @@ if [[ $# -ne 0 ]]; then
     exit 1
 fi
 
-if [[ ! -f cargo-test-fuzz/substrate_node_template.patch ]]; then
-    echo "$0 must be run from the root of the test-fuzz repository." >&2
-    exit 1 
-fi
+cd "$(dirname "$0")"/..
 
 DIR="$PWD"
 
