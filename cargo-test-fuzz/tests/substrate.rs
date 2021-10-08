@@ -30,7 +30,9 @@ fn do_something() {
     let mut buf = Vec::new();
     let _ = file.read_to_end(&mut buf).unwrap();
     let patch = String::from_utf8(buf).unwrap();
+    println!("---- begin `substrate_node_template.patch` ----");
     println!("{}", patch);
+    println!("---- end `substrate_node_template.patch` ----");
 
     Command::new("git")
         .current_dir(tempdir.path())
