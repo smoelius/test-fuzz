@@ -795,30 +795,11 @@ fn map_path_arg(
     expr: &Expr,
     path: &TypePath,
 ) -> (Type, Expr, Expr) {
-    if_chain! {
-        if let Some(PathArguments::AngleBracketed(args)) = type_utils::match_type_path(path, &["std", "sync", "Arc"]);
-        if args.args.len() == 1;
-        if let GenericArgument::Type(ty) = &args.args[0];
-        then {
-            return map_arc_arg(conversions, i, expr, ty);
-        }
-    }
     (
         parse_quote! { #path },
         parse_quote! { #expr.clone() },
         parse_quote! { args.#i },
     )
-}
-
-fn map_arc_arg(
-    conversions: &Conversions,
-    i: &Literal,
-    expr: &Expr,
-    ty: &Type,
-) -> (Type, Expr, Expr) {
-    let expr = parse_quote! { (*#expr) };
-    let (ty, ser, de) = map_typed_arg(conversions, i, &expr, ty);
-    (ty, ser, parse_quote! { std::sync::Arc::new( #de ) })
 }
 
 fn map_ref_arg(
