@@ -11,4 +11,4 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Create release notes
-        run: git log -n 1 CHANGELOG.md
+        run: git log -p -1 CHANGELOG.md
