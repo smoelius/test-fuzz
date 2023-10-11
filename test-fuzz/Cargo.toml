@@ -38,6 +38,7 @@ auto_concretize = [
     "internal/__auto_concretize",
     "test-fuzz-macro/__auto_concretize",
 ]
+self_ty_in_mod_name = ["test-fuzz-macro/__self_ty_in_mod_name"]
 serde_bincode = ["internal/__serde_bincode"]
 serde_cbor = ["internal/__serde_cbor"]
 serde_cbor4ii = ["internal/__serde_cbor4ii"]

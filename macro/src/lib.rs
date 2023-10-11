@@ -424,8 +424,7 @@ fn map_method_or_fn(
     };
 
     let target_ident = &sig.ident;
-    let renamed_target_ident = opts.rename.as_ref().unwrap_or(target_ident);
-    let mod_ident = Ident::new(&format!("{renamed_target_ident}_fuzz"), Span::call_site());
+    let mod_ident = mod_ident(opts, self_ty, target_ident);
 
     // smoelius: This is a hack. When `only_concretizations` is specified, the user should not have
     // to also specify trait bounds. But `Args` is used to get the module path at runtime via
@@ -1068,6 +1067,23 @@ fn args_from_autos(autos: &[Expr]) -> Expr {
             Args( #(#args),* )
         )
     }}
+}
+
+#[allow(unused_variables)]
+fn mod_ident(opts: &TestFuzzOpts, self_ty: &Option<Type>, target_ident: &Ident) -> Ident {
+    let mut s = String::new();
+    #[cfg(feature = "__self_ty_in_mod_name")]
+    if let Some(Type::Path(type_path)) = self_ty {
+        for segment in &type_path.path.segments {
+            s.push_str(&<str as heck::ToSnakeCase>::to_snake_case(
+                &segment.ident.to_string(),
+            ));
+            s.push('_');
+        }
+    }
+    s.push_str(&opts.rename.as_ref().unwrap_or(target_ident).to_string());
+    s.push_str("_fuzz");
+    Ident::new(&s, Span::call_site())
 }
 
 fn log(tokens: &TokenStream2) {
